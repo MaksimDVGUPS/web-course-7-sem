@@ -1,0 +1,6 @@
+{
+  "port": 5000,
+  "jwtSecret": "postavte otlichno",
+  "mongoUrl": "mongodb+srv://admin:admin@cluster0.ygvnp.mongodb.net/app?retryWrites=true&w=majority",
+  "staticPath": "F:\\Учеба\\7 семестр\\WEB\\Курсач\\static"
+}

@@ -1,0 +1,58 @@
+$niceText: 'Izhitsa Cyrillic';
+$text: 'PF Beau Sans Pro';
+$red: #d11315;
+$brown: #532700;
+
+#contacts {
+    background-image: url(../images/bg_tree.jpg);
+    background-size: auto;
+    background-repeat: repeat-y;
+}
+
+.section {
+    width: 1140px;
+    padding: 30px 30px 40px 30px;
+    margin: 0 auto;
+
+    p {
+        text-align: center;
+        font-family: $text;
+        font-size: 18px;
+        color: #ffffff;
+        margin-top: 10px;
+        width: 100%;
+    }
+}
+
+.sectionName {
+    text-align: center;
+    font-family: $text;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media screen and (max-width:1200px){ 
+    .section {
+        width: 900px;
+    }
+}
+
+@media screen and (max-width:960px){ 
+    .section {
+        width: 580px;
+    }
+}
+
+@media screen and (max-width:640px){ 
+    .section {
+        width: 420px;
+    }
+}
+
+@media screen and (max-width:480px){ 
+    .section {
+        width: 300px;
+        padding: 30px 10px 40px 10px;
+    }
+}

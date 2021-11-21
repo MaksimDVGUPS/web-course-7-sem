@@ -1,0 +1,140 @@
+$niceText: 'Izhitsa Cyrillic';
+$text: 'PF Beau Sans Pro';
+$red: #d11315;
+$brown: #532700;
+
+.contacts_wrapper {
+    display: grid;
+    font-family: $text;
+    grid-gap: 30px;
+    grid-template-columns: 1.5fr 2fr;
+    padding: 30px 0;
+    width: 100%;
+
+    form {
+        border: #ffffff solid 2px;
+        height: auto;
+        padding: 30px;
+        background-color: rgba($color: #000000, $alpha: 0.5);
+        border-radius: 25px;
+
+        .field {
+            margin-top: 20px;
+
+            p {
+                color: #ffffff;
+                margin: 10px 0 5px 0;
+                font-family: $text;
+            }
+    
+            input {
+                border-radius: 10px;
+                font-family: $text;
+                padding: 10px 20px;
+                width: 100%;
+            }
+    
+            textarea {
+                height: 100px;
+                font-family: $text;
+                padding: 10px 20px;
+                width: 100%;
+            }
+        }
+
+        button {
+            cursor: pointer;
+            margin-top: 20px;
+            width: 300px;
+            height: 40px;
+            border-radius: 25px;
+            background-color: $brown;
+            color: #ffffff;
+            font-family: $text;
+            font-weight: bold;
+            font-size: 26px;
+            border-color: #ffffff;
+        }
+    }
+
+    .contacts {
+        border: #ffffff solid 2px;
+        width: 600px;
+        background-color: rgba($color: #000000, $alpha: 0.5);
+        border-radius: 25px;
+        padding: 30px;
+        width: 100%;
+
+        .object {
+            margin-bottom: 30px;
+        }
+    }
+}
+
+.recvizits {
+    border: #ffffff solid 2px;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 30px;
+
+    * {
+        text-align: center;
+    }
+
+    h3 + p {
+        margin-top: 5px;
+    }
+
+    p + h3 {
+        margin-top: 20px;
+    }
+}
+
+iframe {
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: #ffffff;
+    font-family: $text;
+    font-size: 24px;
+    margin: 0px;
+}
+
+p {
+    color: #ffffff;
+    font-family: $text;
+    font-size: 14px;
+}
+
+@media screen and (max-width:1200px){
+    .contacts_wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width:960px){
+    .wrapper {
+        align-items: center;
+    }
+    .contacts_wrapper {
+        grid-template: repeat(2, auto) / 1fr;
+
+        form {
+            order: 1;
+        }
+    }
+}
+
+@media screen and (max-width:640px){
+    .contacts_wrapper form button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:480px){
+    .contacts_wrapper form button {
+        font-size: 20px;
+    }
+}

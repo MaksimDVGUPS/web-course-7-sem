@@ -1,0 +1,212 @@
+$niceText: 'Izhitsa Cyrillic';
+$text: 'PF Beau Sans Pro';
+$red: #d11315;
+$brown: #532700;
+
+#cart {
+    background-image: url(../images/bg_tree.jpg);
+    background-size: auto;
+    background-repeat: repeat-y;
+}
+
+h2 {
+    color: #ffffff;
+    font-family: $text;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 30px auto 0px auto;
+}
+
+.cart {
+    width: 100%;
+
+    &__wrapper {
+        padding: 30px 0;
+        width: 100%;
+    }
+
+    &__form {
+        display: grid;
+        grid-column-gap: 50px;
+        grid-row-gap: 30px;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 20px 0 50px;
+    }
+
+    &__field {
+        width: 100%;
+
+        p {
+            color: #ffffff;
+            font-family: $text;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        input {
+            border-radius: 10px;
+            font-family: $text;
+            margin-top: 10px;
+            padding: 10px 20px;
+            width: 100%;
+        }
+    }
+
+    &__submit {
+        background-color: $brown;
+        border-color: #ffffff;
+        border-radius: 25px;
+        color: #ffffff;
+        cursor: pointer;
+        font-family: $text;
+        font-weight: bold;
+        font-size: 26px;
+        height: 40px;
+        width: 350px;
+    }
+}
+
+.cart-item {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 10px;
+    display: grid;
+    grid-gap: 50px;
+    grid-template-columns: 1fr 120px 100px 28px;
+    padding: 20px 40px;
+
+    & + & {
+        margin-top: 20px;
+    }
+
+    &__header {
+        align-items: center;
+        display: flex;
+    }
+
+    &__img {
+        height: auto;
+        width: 100px;
+    }
+
+    &__name {
+        color: #000;
+        font-size: 18px;
+        font-weight: bold;
+        margin-left: 50px;
+    }
+
+    &__controls {
+        align-items: center;
+        background: #eee;
+        border-radius: 20px;
+        display: flex;
+        height: 40px;
+        width: fit-content;
+
+        &-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 100%;
+            padding: 10px 20px;
+        }
+
+        &-count {
+            font-family: $text;
+            font-size: 20px;
+            line-height: 100%;
+        }
+    }
+
+    &__price {
+        font-family: $text;
+        font-size: 20px;
+    }
+
+    &__delete {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        height: 30px;
+        width: 30px;
+
+        img {
+            height: auto;
+            width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width:1200px){
+    .cart {
+        &__submit {
+            width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width:960px){
+    .cart {
+        &__submit {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .cart-item {
+        grid-row-gap: 30px;
+        grid-template-columns: auto 1fr auto;
+
+        &__header {
+            grid-column: 1 / -1;
+        }
+
+        &__img {
+            width: 110px;
+        }
+    }
+}
+
+@media screen and (max-width:640px){
+    .cart {
+        &__form {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+@media screen and (max-width:480px){
+    .cart {
+        &__submit {
+            font-size: 20px;
+        }
+    }
+
+    .cart-item {
+        grid-gap: 20px;
+        grid-template-columns: 1fr auto;
+        padding: 15px;
+
+        &__header {
+            display: block;
+        }
+
+        &__img {
+            width: 100%;
+        }
+
+        &__name {
+            margin-top: 20px;
+            margin-left: 0;
+            text-align: center;
+        }
+
+        &__controls {
+            grid-column: 1 / -1;
+            margin: 0 auto;
+        }
+    }
+}
