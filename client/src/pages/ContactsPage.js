@@ -1,10 +1,24 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import '../assets/css/contacts.scss'
+import axios from "axios";
 
 export const ContactsPage = () => {
+    const [sended, setSended] = useState(false)
+
+    const sendForm = async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+        const response =  await axios.post('http://localhost:5000/api/orders', formData)
+
+        if (response.status === 200) {
+            setSended(true)
+        }
+    }
+
     return (
         <>
             <Header h1='Меню нашего ресторана' />
@@ -13,27 +27,26 @@ export const ContactsPage = () => {
                 <div className="blackFilter">
                     <div className="wrapper">
                         <div className="contacts_wrapper">
-                            <form action="submit">
-                                <h3>Форма связи по любым вопросам</h3>
-                                <div className="field" tabIndex="1">
-                                    <p>
-                                        Ваше имя
-                                    </p>
-                                    <input name="username" type="text" placeholder="Гордон Рамзи" required />
-                                </div>
-                                <div className="field" tabIndex="2">
-                                    <p htmlFor="phone">
-                                        Номер телефона
-                                    </p>
-                                    <input name="phone" type="tel" placeholder="+7(999)999-99-99" required />
-                                </div>
-                                <div className="field" tabIndex="3">
-                                    <p htmlFor="message">
-                                        Ваше сообщение или комментарий
-                                    </p>
-                                    <textarea name="message" placeholder="Хочу узнать о..."></textarea>
-                                </div>
-                                <button type="sumbit">Заказать звонок</button>
+                            <form onSubmit={sendForm}>
+                                {!sended
+                                    ? <>
+                                        <h3>Форма связи по любым вопросам</h3>
+                                        <div className="field" tabIndex="1">
+                                            <p>Ваше имя</p>
+                                            <input name="username" type="text" placeholder="Гордон Рамзи" required />
+                                        </div>
+                                        <div className="field" tabIndex="2">
+                                            <p htmlFor="phone">Номер телефона</p>
+                                            <input name="phone" type="tel" placeholder="+7(999)999-99-99" required />
+                                        </div>
+                                        <div className="field" tabIndex="3">
+                                            <p htmlFor="message">Ваше сообщение или комментарий</p>
+                                            <textarea name="message" placeholder="Хочу узнать о..."></textarea>
+                                        </div>
+                                        <button type="sumbit">Заказать звонок</button>
+                                    </>
+                                    : <h3>Спасибо за ваше обращение! В ближайшее время Вам позвонит нащ менеджер.</h3>
+                                }
                             </form>
                             <div className="contacts">
                                 <div className="object">
@@ -64,7 +77,7 @@ export const ContactsPage = () => {
                         </div>
                         <iframe
                             src="https://yandex.ru/map-widget/v1/?um=constructor%3A143e14f6a3b336072e5b8762d804bab3372deca4dd80177d6a036f8835f4bd74&amp;source=constructor"
-                            width="100%" height="500" frameBorder="0"></iframe>
+                            width="100%" height="500" frameBorder="0" title="map"></iframe>
                     </div>
                 </div>
             </div>

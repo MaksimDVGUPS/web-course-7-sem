@@ -7,13 +7,15 @@ import '../assets/css/menu.scss'
 import axios from "axios";
 
 export const MenuPage = () => {
-    const [selectedCategory, setSelectedCategory] = useState([])
     const [foods, setFoods] = useState([])
 
-    useEffect(async () => {
-        const response = await axios.get('http://localhost:5000/api/category/with-foods')
-        setFoods(response.data)
-    }, [selectedCategory])
+    useEffect(() => {
+        async function fetchFoods () {
+            const response = await axios.get('http://localhost:5000/api/category/with-foods')
+            setFoods(response.data)
+        }
+        fetchFoods()
+    }, [])
 
     function addToCart (e) {
         const foodID = e.target.closest('.card').attributes.getNamedItem('id').value
@@ -25,9 +27,7 @@ export const MenuPage = () => {
 
             const indexInCart = cart.indexOf(cart.find(food => food.id === foodID))
 
-            console.log(indexInCart)
-
-            if (indexInCart != -1) {
+            if (indexInCart !== -1) {
                 cart[indexInCart].quantity++
             } else {
                 cart.push({
@@ -61,32 +61,35 @@ export const MenuPage = () => {
                         </div>
                         <div className="menu">
                             {foods.map(category => {
-                                return (
-                                    <div key={category._id} id={category._id}>
-                                        <div className="sectionName">{category.title}</div>
-                                        <div className="cardWrapper">
-                                            {category.foods.map(food => {
-                                                return (
-                                                    <div className="card" key={food._id} id={food._id}>
-                                                        <div className="imgWrapper">
-                                                            <img src={`http://localhost:5000/${food.img}`} alt={food.title}
-                                                                 title={food.title} />
+                                if (category.foods.length !== 0) {
+                                    return (
+                                        <div key={category._id} id={category._id}>
+                                            <div className="sectionName">{category.title}</div>
+                                            <div className="cardWrapper">
+                                                {category.foods.map(food => {
+                                                    return (
+                                                        <div className="card" key={food._id} id={food._id}>
+                                                            <div className="imgWrapper">
+                                                                <img src={`http://localhost:5000/${food.img}`} alt={food.title}
+                                                                     title={food.title} />
+                                                            </div>
+                                                            <div className="title">{food.title}</div>
+                                                            <div className="description">{food.description}</div>
+                                                            <div className="cardFooter">
+                                                                <div className="price">{food.price}₽</div>
+                                                                <button onClick={addToCart} className="cardCart">
+                                                                    <img src={cart} alt="Добавить в корзину"
+                                                                         title="Добавить в корзину" />
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div className="title">{food.title}</div>
-                                                        <div className="description">{food.description}</div>
-                                                        <div className="cardFooter">
-                                                            <div className="price">{food.price}₽</div>
-                                                            <button onClick={addToCart} className="cardCart">
-                                                                <img src={cart} alt="Добавить в корзину"
-                                                                     title="Добавить в корзину" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
+                                                    )
+                                                })}
+                                            </div>
                                         </div>
-                                    </div>
-                                )
+                                    )
+                                }
+                                return undefined
                             })}
                         </div>
                     </div>

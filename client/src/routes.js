@@ -7,10 +7,12 @@ import {MenuPage} from "./pages/MenuPage";
 import {ContactsPage} from "./pages/ContactsPage";
 import {AboutPage} from "./pages/AboutPage";
 import {OfertaPage} from "./pages/OfertaPage";
-import {AdminPage} from "./pages/AdminPage";
+import {AllFoodsPage} from "./pages/AllFoodsPage";
+import {AllCategoriesPage} from "./pages/AllCategoriesPage";
+import {AllUsersPage} from "./pages/AllUsersPage";
 
-export const useRoutes = isAuthenticated => {
-    if (isAuthenticated) {
+export const useRoutes = (auth, setAuth) => {
+    if (auth.isAuth) {
         return (
             <Routes>
                 <Route path="/menu" element={<MenuPage />} />
@@ -18,7 +20,9 @@ export const useRoutes = isAuthenticated => {
                 <Route path="/contacts" element={<ContactsPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/oferta" element={<OfertaPage />} />
-                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/admin" element={<AllFoodsPage setAuth={setAuth} />} />
+                <Route path="/admin/categories" element={<AllCategoriesPage setAuth={setAuth} />} />
+                <Route path="/admin/users" element={<AllUsersPage auth={auth} setAuth={setAuth} />} />
                 <Route path="*" element={<IndexPage />} />
             </Routes>
         )
@@ -31,7 +35,7 @@ export const useRoutes = isAuthenticated => {
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/oferta" element={<OfertaPage />} />
-            <Route path="/admin" element={<AuthPage />} />
+            <Route path="/admin/*" element={<AuthPage auth={auth} setAuth={setAuth} />} />
             <Route path="*" element={<IndexPage />} />
         </Routes>
     )

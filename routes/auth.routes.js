@@ -1,9 +1,5 @@
 const {Router} = require('express')
-const bcrypt = require('bcryptjs')
-const config = require('config')
-const jwt = require('jsonwebtoken')
-const {check, validationResult} = require('express-validator')
-const User = require('../models/User')
+const {check, validationResult, query} = require('express-validator')
 const router = Router()
 const AuthController = require('../controllers/authController')
 
@@ -23,6 +19,25 @@ router.post(
         check('password', 'Введите пароль').exists()
     ],
     AuthController.login)
+
+router.post(
+    '/check-auth',
+    [
+        check('token', 'Введите корректный токен').isJWT(),
+    ],
+    AuthController.checkAuth)
+
+router.get(
+    '/user',
+    AuthController.getUsers)
+
+router.delete(
+    '/user',
+    [
+        query('_id', 'Отсутствует ID пользователя').exists()
+    ],
+    AuthController.deleteUser
+)
 
 
 module.exports = router

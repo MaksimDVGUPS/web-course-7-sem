@@ -4,13 +4,14 @@ const Uuid = require('uuid')
 const Food = require('../models/Food')
 const FoodCategory = require('../models/FoodCategory')
 const fs = require("fs");
+const {Types} = require("mongoose");
 
 class AuthController {
     async getAll (req, res) {
         try {
             const foods = await Food.find()
 
-            res.status(201).json(foods)
+            res.status(200).json(foods)
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'})
@@ -59,7 +60,9 @@ class AuthController {
 
             await category.save()
 
-            res.status(201).json({message: 'Блюдо создано'})
+            const foods = await FoodCategory.find().populate('foods')
+
+            res.status(201).json({message: 'Блюдо создано', foods})
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'})
@@ -78,7 +81,7 @@ class AuthController {
                 })
             }
 
-            const { _id } = req.body
+            const { _id } = req.query
 
             const food = await Food.findOne({_id})
 
@@ -86,11 +89,22 @@ class AuthController {
                 return res.status(400).json({ message: 'Указанное блюдо отсутствует' })
             }
 
+            // Удаление изображения блюда
             fs.unlinkSync(`${config.get('staticPath')}\\${food.img}`)
 
+            // Удаление блюда из категории
+            const category = await FoodCategory.findOne({foods: _id})
+
+            category.foods = category.foods.filter(food => food.toString() !== _id)
+            await category.save()
+
+            // Удаление блюда из списка блюд
             food.remove()
 
-            res.json({ message: "Блюдо успешно удалено" })
+            // Результирующий массив блюд
+            const foods = await FoodCategory.find().populate('foods')
+
+            res.json({ message: "Блюдо успешно удалено", foods })
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'})
@@ -101,8 +115,6 @@ class AuthController {
     async getFew (req, res) {
         try {
             let promises = []
-
-            console.log(res.query)
 
             for (const _id of JSON.parse(req.query.IDs)) {
                 const food = Food.findOne({_id}).exec()

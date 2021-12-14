@@ -7,16 +7,19 @@ $brown: #532700;
     background-image: url(../images/bg_tree.jpg);
     background-size: cover;
     background-repeat: repeat-y;
+
+    .wrapper {
+        padding-bottom: 40px;
+    }
 }
 
 .categories {
-    height: 30px;
     width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .category {
@@ -43,16 +46,13 @@ $brown: #532700;
 }
 
 .cardWrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: stretch;
+    display: grid;
+    grid-gap: 60px;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 30px;
 }
 
 .card {
-    width: 320px;
-    margin: 20px;
     background-color: rgba($color: #ffffff, $alpha: 1);
     display: flex;
     flex-direction: column;
@@ -108,31 +108,8 @@ $brown: #532700;
     color: $brown;
 }
 
-@media screen and (max-width:1200px){
-    .categories {
-        width: 840px;
-        margin: 0 auto;
-    }
-
-    .sectionName {
-        width: 840px;
-        margin: 20px auto 0 auto;
-    }
-
-    .cardWrapper {
-        width: 960px;
-    }
-
-    .card {
-        margin: 20px auto;
-    }
-}
-
 @media screen and (max-width:960px){
     .categories {
-        width: 360px;
-        margin: 0 auto;
-
         .category:nth-child(4){
             display: none;
         }
@@ -142,43 +119,24 @@ $brown: #532700;
         }
     }
 
-    .sectionName {
-        width: 360px;
+    .cardWrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width:640px){
+    .cardWrapper {
+       grid-gap: 30px;
     }
 
-    .cardWrapper {
-        width: 360px;
-        margin: 0 auto;
+    .cardFooter button img {
+        height: 35px;
+        width: 35px;
     }
 }
 
 @media screen and (max-width:480px){
-    .categories {
-        width: 280px;
-
-        .category:nth-child(6){
-            display: none;
-        }
-    }
-
-    .sectionName {
-        width: 300px;
-    }
-
     .cardWrapper {
-        width: 300px;
-    }
-
-    .card {
-        width: 260px;
-    }
-
-    .imgWrapper {
-        height: 260px;
-    
-        img {
-            width: 260px;
-            height: 260px;
-        }
+        grid-template-columns: 1fr;
     }
 }

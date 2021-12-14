@@ -8,6 +8,7 @@ import CartItem from "../components/CartItem";
 
 export const CartPage = () => {
     const [cart, setCart] = useState(initialCart())
+    const [sended, setSended] = useState(false)
 
     function initialCart () {
         if (localStorage && localStorage.getItem('cart')) {
@@ -19,7 +20,12 @@ export const CartPage = () => {
 
     const [foodInfo, setFoodInfo] = useState([])
 
-    useEffect(async () => {
+    useEffect(() => {
+        async function fetchFoodFromCart (IDs) {
+            const response =  await axios.get('http://localhost:5000/api/food/few', {params: {IDs: JSON.stringify(IDs)}})
+            setFoodInfo(response.data)
+        }
+
         const IDs = []
 
         if (cart) {
@@ -27,10 +33,9 @@ export const CartPage = () => {
                 IDs.push(food.id)
             }
 
-            const response = await axios.get('http://localhost:5000/api/food/few', {params: {IDs: JSON.stringify(IDs)}})
-            setFoodInfo(response.data)
+            fetchFoodFromCart(IDs)
         }
-    }, [])
+    }, [cart])
 
     const plusCount = (id) => {
         const newCart = cart.filter(item => {
@@ -57,12 +62,28 @@ export const CartPage = () => {
     }
 
     const deleteFood = (id) => {
-        const newCart = cart.filter(item => item.id != id)
-        const newFoodInfo = foodInfo.filter(item => item._id != id)
+        const newCart = cart.filter(item => item.id !== id)
+        const newFoodInfo = foodInfo.filter(item => item._id !== id)
 
         setFoodInfo(newFoodInfo)
         setCart(newCart)
         localStorage.setItem('cart', JSON.stringify(newCart))
+    }
+
+    const sendOrder = async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+
+        formData.append('cart', JSON.stringify(cart))
+
+        const response =  await axios.post('http://localhost:5000/api/orders', formData)
+
+        if (response.status === 200) {
+            localStorage.setItem('cart', JSON.stringify([]))
+            setCart([])
+            setSended(true)
+        }
     }
 
     return (
@@ -75,17 +96,19 @@ export const CartPage = () => {
                         <div className="cart">
                             <h2>Выбранные блюда</h2>
                             <div className="cart__wrapper">
-                                {cart && cart.length != 0 ? foodInfo.map(food => {
+                                {cart && cart.length !== 0 ? foodInfo.map(food => {
                                     return (
                                         <CartItem key={food._id} count={cart.find(cartItem => (cartItem.id === food._id)).quantity} food={food}
                                                   minusCount={minusCount} plusCount={plusCount} onDelete={deleteFood}/>
                                     )
-                                }) : <p>В вашей корзине нет товаров</p>}
+                                }) : (sended)
+                                    ? <p>Ваш заказ успешно отправлен! Скоро наш менеджер свяжется с вами!</p>
+                                    : <p>В вашей корзине нет товаров</p>}
                             </div>
-                            {cart && cart.length != 0 &&
+                            {cart && cart.length !== 0 &&
                                 <>
                                     <h2>Заполните форму заказа</h2>
-                                    <form className="cart__form">
+                                    <form className="cart__form" onSubmit={sendOrder}>
                                         <div className="cart__field" tabIndex="1">
                                             <p>
                                                 Ваше имя
@@ -102,7 +125,7 @@ export const CartPage = () => {
                                             <p htmlFor="message">
                                                 Ваш адрес
                                             </p>
-                                            <input name="message" placeholder="ул. Пушкина, д. Колотушкина..."></input>
+                                            <input name="address" placeholder="ул. Пушкина, д. Колотушкина..."></input>
                                         </div>
                                         <div className="cart__field" tabIndex="4">
                                             <p htmlFor="message">

@@ -2,5 +2,10 @@
   "port": 5000,
   "jwtSecret": "postavte otlichno",
   "mongoUrl": "mongodb+srv://admin:admin@cluster0.ygvnp.mongodb.net/app?retryWrites=true&w=majority",
-  "staticPath": "F:\\Учеба\\7 семестр\\WEB\\Курсач\\static"
+  "staticPath": "F:\\Учеба\\7 семестр\\WEB\\Курсач\\static",
+  "smtp_host": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "maksim000072@gmail.com",
+  "smtp_password": "StrashkoMaksim007",
+  "api_url": "http://localhost:5000"
 }

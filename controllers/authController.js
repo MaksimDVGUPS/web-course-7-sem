@@ -24,12 +24,19 @@ class AuthController {
                 return res.status(400).json({message: 'Такой пользователь уже существует'})
             }
 
-            const hashedPassword = bcrypt.hash(password, 12)
+            const hashedPassword = await bcrypt.hash(password, 12)
             const user = new User({email, password: hashedPassword})
 
             await user.save()
 
-            res.status(201).json({message: 'Пользователь создан'})
+            const users = await User.find()
+
+            users.map(user => {
+                user.password = undefined
+                return user
+            })
+
+            res.status(201).json(users)
         } catch (e) {
             res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
         }
@@ -40,7 +47,7 @@ class AuthController {
             const errors = validationResult(req)
 
             if (!errors.isEmpty()) {
-                return res.status(400).json({
+                return res.status(401).json({
                     errors: errors.array(),
                     message: 'Некорректные данные при авторизации'
                 })
@@ -51,13 +58,13 @@ class AuthController {
             const user = await User.findOne({email})
 
             if (!user) {
-                return res.status(400).json({ message: 'Неверный логин и/или пароль' })
+                return res.status(401).json({ message: 'Неверный логин и/или пароль' })
             }
 
             const isMatch = await bcrypt.compare(password, user.password)
 
             if (!isMatch) {
-                return res.status(400).json({ message: 'Неверный логин и/или пароль' })
+                return res.status(401).json({ message: 'Неверный логин и/или пароль' })
             }
 
             const token = jwt.sign(
@@ -66,7 +73,86 @@ class AuthController {
                 { expiresIn: '1h' }
             )
 
-            res.json({ token, userID: user.id })
+            res.status(200).json({ token, userID: user.id, userRole: user.role })
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        }
+    }
+
+    async checkAuth (req, res) {
+        try {
+            const errors = validationResult(req)
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    errors: errors.array(),
+                    message: 'Некорректные данные при проверке доступа'
+                })
+            }
+
+            const { token } = req.body
+            let decodedJWT
+
+            await jwt.verify(token, config.get('jwtSecret'), async (err, decoded) => {
+                if (err) {
+                    res.status(401).json({ message: 'Некорректный JWT' })
+                    return
+                }
+                decodedJWT = decoded
+
+                const user = await User.findOne( { _id: decodedJWT.userId})
+
+                res.status(200).json({ token, userID: user._id, userRole: user.role })
+            })
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова', e })
+        }
+    }
+
+    async getUsers (req, res) {
+        try {
+            const users = await User.find()
+
+            users.map(user => {
+                user.password = undefined
+                return user
+            })
+
+            res.json(users)
+        } catch (e) {
+            res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        }
+    }
+
+    async deleteUser (req, res) {
+        try {
+            const errors = validationResult(req)
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    errors: errors.array(),
+                    message: 'Некорректный ID'
+                })
+            }
+
+            const { _id } = req.query
+
+            const user = await User.findOne({_id})
+
+            if (!user) {
+                return res.status(400).json({ message: 'Указанный пользователь отсутствует' })
+            }
+
+            await user.remove()
+
+            const users = await User.find()
+
+            users.map(user => {
+                user.password = undefined
+                return user
+            })
+
+            res.json({ message: "Пользователь успешно удален", users })
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }

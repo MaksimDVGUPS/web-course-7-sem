@@ -21,7 +21,7 @@ router.post(
 router.delete(
     '/',
     [
-        check('_id', 'Отсутствует блюдо').exists()
+        query('_id', 'Отсутствует блюдо').exists()
     ],
     FoodConroller.deleteOne
 )

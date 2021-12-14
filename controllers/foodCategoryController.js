@@ -41,7 +41,9 @@ class AuthController {
 
             await category.save()
 
-            res.status(201).json({message: 'Категория блюд создана'})
+            const categories = await FoodCategory.find()
+
+            res.status(201).json({message: 'Категория блюд создана', categories})
         } catch (e) {
             res.status(500).json({message: `Что-то пошло не так, попробуйте снова. Ошибка: ${e}`})
         }
@@ -59,7 +61,7 @@ class AuthController {
                 })
             }
 
-            const { _id } = req.body
+            const { _id } = req.query
 
             const category = await FoodCategory.findOne({_id})
 
@@ -67,9 +69,11 @@ class AuthController {
                 return res.status(400).json({ message: 'Указанная категория отсутствует' })
             }
 
-            category.remove()
+            await category.remove()
 
-            res.json({ message: "Категория успешно удалена" })
+            const categories = await FoodCategory.find()
+
+            res.json({ message: "Категория успешно удалена", categories })
         } catch (e) {
             res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
         }
